@@ -1,0 +1,7 @@
+hello_bootloader:
+	$(V)mkdir -p $(OUTROOT)/boot
+	$(V)gcc -nostdlib -Wl,--build-id=none -e entry_point boot/hello.S -o $(OUTROOT)/boot/hello.elf
+	$(V)objcopy -O binary $(OUTROOT)/boot/hello.elf $(OUTROOT)/boot/hello.bin
+	$(V)cp $(OUTROOT)/boot/hello.bin $(OUTROOT)/boot/hello.bl
+	$(V)tools/adjust $(OUTROOT)/boot/hello.bl
+	$(V)xxd -g 1 $(OUTROOT)/boot/hello.bin

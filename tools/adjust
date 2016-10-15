@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+
+import sys
+import os
+
+def raw_bl_size_limit():
+	return 510
+
+if len(sys.argv) != 2:
+	print("Usage: {} file".format(sys.argv[0]))
+	sys.exit(1)
+
+fname = sys.argv[1]
+
+st = os.stat(fname)
+print("Boot loader size before padding {}".format(st.st_size))
+
+if st.st_size > raw_bl_size_limit():
+	print("File too large: {}".format(st.st_size))
+	sys.exit(1)
+
+fd = open(fname, "ab")
+
+for i in range(raw_bl_size_limit() - st.st_size):
+	fd.write(b"\0")
+
+fd.write(b"\x55\xAA")
+
+fd.close()
