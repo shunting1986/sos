@@ -1,0 +1,7 @@
+all: kernel
+
+# Right now just create a fake kernel, will change
+kernel:
+	$(V)mkdir -p $(OUTROOT)/kern
+	$(V)echo "This is SOS!" > $(OUTROOT)/kern/kernel
+	$(V)echo Fake kernel created.
