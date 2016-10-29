@@ -4,7 +4,36 @@ import sys
 import os
 
 def raw_bl_size_limit():
-	return 510
+	return 510 - 64
+
+# I forget how I figure out this partition record. This is needed only when we
+# want to run on real hardware. QEMU does not need this.
+def write_boot_part(fd):
+	fd.write(b"\x80")
+
+	# h num 62, sector num 62
+	# start chs: 0, 1, 1
+	fd.write(b"\x01\x01\x00")
+	
+	# partition type
+	fd.write(b"\x06")
+
+	# end chs: 
+	# c 01 1111 1111  -- 511
+	# h 11 1101  - 61
+	# s 11 1110  - 62
+
+	# byte 0: 0011 1101
+	# 1: 0111 1110
+	# 2: 1111 1111
+	fd.write(b"\x3D\x7E\xFF")
+
+	# start lba
+	fd.write(b"\x3E\x00\x00\x00");
+
+	# end lba: 
+	# number of sectors
+	fd.write(b"\xC2\x07\x1E\x00")
 
 if len(sys.argv) != 2:
 	print("Usage: {} file".format(sys.argv[0]))
@@ -22,6 +51,10 @@ if st.st_size > raw_bl_size_limit():
 fd = open(fname, "ab")
 
 for i in range(raw_bl_size_limit() - st.st_size):
+	fd.write(b"\0")
+
+write_boot_part(fd)
+for i in range(48):
 	fd.write(b"\0")
 
 fd.write(b"\x55\xAA")
