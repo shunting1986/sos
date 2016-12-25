@@ -45,15 +45,22 @@ entry_point:
 	.code32
 next:
 	# SAMPLE: print the first several characters of kernel
-	movb 0x10000, %al
-	movb %al, 0xB8000
-	movb $0x03, 0xB8001
-	movb 0x10001, %al
-	movb %al, 0xB8002
-	movb $0x03, 0xB8003
-	movb 0x10002, %al
-	movb %al, 0xB8004
-	movb $0x03, 0xB8005
+  # movb 0x10000, %al
+  # movb %al, 0xB8000
+  # movb $0x03, 0xB8001
+  # movb 0x10001, %al
+  # movb %al, 0xB8002
+  # movb $0x03, 0xB8003
+  # movb 0x10002, %al
+  # movb %al, 0xB8004
+  # movb $0x03, 0xB8005
+
+	movw $0x10, %ax
+	movw %ax, %ds
+	movw %ax, %es
+	movw %ax, %ss
+	movl $0x7c00, %esp
+	call bootmain
 1:
 	jmp 1b
 prot_gdt_table:

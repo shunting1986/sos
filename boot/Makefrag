@@ -3,7 +3,8 @@ all: real_bootloader
 real_bootloader:
 	$(V)echo Creating real bootloader
 	$(V)mkdir -p $(OUTROOT)/boot
-	$(V)gcc -nostdlib -Wl,--build-id=none -e entry_point -Wl,-Ttext=0x7c00 boot/boot.S -o $(OUTROOT)/boot/sos_boot.elf
+	$(V)gcc -nostdlib -Wl,--build-id=none -e entry_point -Wl,-Ttext=0x7c00 -m32 boot/boot.S boot/main.c -o $(OUTROOT)/boot/sos_boot.elf
+	$(V)objdump -d $(OUTROOT)/boot/sos_boot.elf > $(OUTROOT)/boot/sos_boot.asm
 	$(V)objcopy -O binary $(OUTROOT)/boot/sos_boot.elf $(OUTROOT)/boot/sos_boot.bin
 	$(V)cp $(OUTROOT)/boot/sos_boot.bin $(OUTROOT)/boot/sos_boot.bl
 	$(V)tools/adjust $(OUTROOT)/boot/sos_boot.bl
