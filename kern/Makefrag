@@ -1,7 +1,27 @@
 all: kernel
 
+KERN_LINK_FLAGS=-nostdlib -m32 -e entry_point -Wl,-Ttext=0xF0000000
+KERN_CC_FLAGS=-m32
+
+kern_src_list=entry.S init.c
+kern_obj_list:=$(patsubst %.S,$(OUTROOT)/kern/%.o,$(kern_src_list))
+kern_obj_list:=$(patsubst %.c,$(OUTROOT)/kern/%.o,$(kern_obj_list))
+
+$(OUTROOT)/kern/%.o: kern/%.S
+	$(V)mkdir -p $(OUTROOT)/kern
+	$(V)gcc $(KERN_CC_FLAGS) -c $< -o $@
+
+$(OUTROOT)/kern/%.o: kern/%.c
+	$(V)mkdir -p $(OUTROOT)/kern
+	$(V)gcc $(KERN_CC_FLAGS) -c $< -o $@
+
 # Right now just create a fake kernel, will change
-kernel:
+fake_kernel:
 	$(V)mkdir -p $(OUTROOT)/kern
 	$(V)echo "This is SOS!" > $(OUTROOT)/kern/kernel
 	$(V)echo Fake kernel created.
+
+kernel: $(kern_obj_list)
+	$(V)mkdir -p $(OUTROOT)/kern
+	$(V)gcc $(KERN_LINK_FLAGS) $(kern_obj_list) -o $(OUTROOT)/kern/kernel
+	$(V)echo Kernel created.
