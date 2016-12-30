@@ -1,6 +1,7 @@
 void
 kern_init(void) {
-	char *s = "Welcome to SOS!";
+	char *raw_s = "Welcome to SOS!";
+	char *s = (char *) ((int) raw_s & 0x0FFFFFFF);
 	char *cp = (char *) 0xB8000;
 	int i;
 	for (i = 0; s[i]; i++) {

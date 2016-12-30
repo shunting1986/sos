@@ -24,4 +24,5 @@ fake_kernel:
 kernel: $(kern_obj_list)
 	$(V)mkdir -p $(OUTROOT)/kern
 	$(V)gcc $(KERN_LINK_FLAGS) $(kern_obj_list) -o $(OUTROOT)/kern/kernel
+	$(V)objdump -d $(OUTROOT)/kern/kernel > $(OUTROOT)/kern/kernel.asm
 	$(V)echo Kernel created.
