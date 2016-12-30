@@ -18,7 +18,7 @@ void bootmain(void) {
 	Elf32_Phdr *phend = phdr + ehdr->e_phnum;
 	while (phdr != phend) {
 		// load loadable segments
-		// Let kernel itself to clear RSS
+		// Let kernel itself to clear BSS
 		if (phdr->p_type == PT_LOAD) {
 			memcpy(TOPHY(phdr->p_vaddr), file_sa + phdr->p_offset,
 				phdr->p_filesz);

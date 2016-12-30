@@ -1,7 +1,7 @@
 all: kernel
 
 KERN_LINK_FLAGS=-nostdlib -m32 -e entry_point -T kern/kern.ld
-KERN_CC_FLAGS=-m32
+KERN_CC_FLAGS=-m32 -I.
 
 kern_src_list=entry.S init.c
 kern_obj_list:=$(patsubst %.S,$(OUTROOT)/kern/%.o,$(kern_src_list))
