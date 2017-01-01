@@ -1,5 +1,7 @@
 #include <kern/seg_desc.h>
 #include <inc/assert.h>
+#include <kern/putchar.h>
+#include <kern/assert.h>
 
 #define REMOVE_0XF(addr) ((uint32_t) (addr) & 0x0FFFFFFF)
 
@@ -14,15 +16,14 @@ kern_init(void) {
 	static_assert(sizeof(struct seg_desc) == 8);
 	static_assert(sizeof(struct pseudo_desc) == 6);
 
-	char *s = "Welcome to SOS!";
-	#if 0
-	char *cp = (char *) 0xB8000;
-	#else
-	char *cp = (char *) 0xF00B8000;
-	#endif
-	int i;
-	for (i = 0; s[i]; i++) {
-		cp[i * 2] =  s[i];
-		cp[i * 2 + 1] = 3;
+	char *s = "Welcome to SOS!!!\nDo you like it?";
+	int i, j;
+	for (j = 0; j < 60; j++) {
+		for (i = 0; s[i]; i++) {
+			putchar(s[i]);
+		}
+		putchar('A' + j);
+		putchar('\n');
 	}
+	// TODO support printf
 }

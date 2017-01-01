@@ -1,3 +1,4 @@
+#define _BOOT_LOADER_
 #include <inc/elf.h>
 #include <inc/string.h>
 
