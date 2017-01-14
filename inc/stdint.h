@@ -1,8 +1,8 @@
 #ifndef _sos_inc_stdint_h
 #define _sos_inc_stdint_h
 
-#ifdef SOS64
-#error not support yet
+#ifndef SOS32
+#error only support 32 bit yet
 #endif
 
 typedef char int8_t;

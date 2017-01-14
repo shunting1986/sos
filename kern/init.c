@@ -2,6 +2,7 @@
 #include <inc/assert.h>
 #include <kern/putchar.h>
 #include <kern/assert.h>
+#include <kern/printf.h>
 
 #define REMOVE_0XF(addr) ((uint32_t) (addr) & 0x0FFFFFFF)
 
@@ -15,15 +16,5 @@ void
 kern_init(void) {
 	static_assert(sizeof(struct seg_desc) == 8);
 	static_assert(sizeof(struct pseudo_desc) == 6);
-
-	char *s = "Welcome to SOS!!!\nDo you like it?";
-	int i, j;
-	for (j = 0; j < 60; j++) {
-		for (i = 0; s[i]; i++) {
-			putchar(s[i]);
-		}
-		putchar('A' + j);
-		putchar('\n');
-	}
-	// TODO support printf
+	printf("Welcome to SOS %d\nHave fun\n", 2017);
 }
