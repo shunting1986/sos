@@ -37,6 +37,12 @@ void printfmt(char *fmt, va_list args, putchar_fn *putchar) {
 		if (fmt[i] == '%' && fmt[i + 1] == 'd') {
 			printnum(va_arg(args, int), putchar);
 			i++;
+		} else if (fmt[i] == '%' && fmt[i + 1] == 's') {
+			char *s = va_arg(args, char *);
+			while (*s) {
+				putchar(*s++);
+			}
+			i++;
 		} else {
 			putchar(ch);
 		}
