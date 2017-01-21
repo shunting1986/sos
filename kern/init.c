@@ -3,6 +3,7 @@
 #include <kern/putchar.h>
 #include <kern/assert.h>
 #include <kern/printf.h>
+#include <kern/pci.h>
 
 #define REMOVE_0XF(addr) ((uint32_t) (addr) & 0x0FFFFFFF)
 
@@ -17,5 +18,6 @@ kern_init(void) {
 	static_assert(sizeof(struct seg_desc) == 8);
 	static_assert(sizeof(struct pseudo_desc) == 6);
 	printf("Welcome to SOS %d\nHave fun\n", 2017);
+	pci_enumerate();
 	panic("%s!", "not ready yet");
 }

@@ -4,7 +4,18 @@
 #include <kern/putchar.h>
 #include <kern/printf.h>
 
-#define panic(fmt, ...) _panic(__FILE__, __LINE__, fmt, __VA_ARGS__)
+#define assert(cond) do { \
+	if (!cond) { \
+		panic("assertion fail"); \
+	} \
+} while (0)
+
+/*
+ * ## before __VA_ARGS__ is the trick to support invocation like
+ *    panic("hello");
+ * in which case the varargs is empty.
+ */
+#define panic(fmt, ...) _panic(__FILE__, __LINE__, fmt, ## __VA_ARGS__)
 void _panic(const char *filename, int lineno, const char *fmt, ...);
 
 static void simpanic() {

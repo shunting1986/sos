@@ -3,7 +3,7 @@ all: kernel
 KERN_LINK_FLAGS=-nostdlib -m32 -e entry_point -T kern/kern.ld
 KERN_CC_FLAGS=-m32 -I. -DSOS32
 
-kern_src_list=entry.S init.c putchar.c printf.c assert.c
+kern_src_list=entry.S init.c putchar.c printf.c assert.c pci.c x86.S
 kern_obj_list:=$(patsubst %.S,$(OUTROOT)/kern/%.o,$(kern_src_list))
 kern_obj_list:=$(patsubst %.c,$(OUTROOT)/kern/%.o,$(kern_obj_list))
 
@@ -21,8 +21,9 @@ fake_kernel:
 	$(V)echo "This is SOS!" > $(OUTROOT)/kern/kernel
 	$(V)echo Fake kernel created.
 
+# for long long support on 32bit platform, we need add -lgcc option
 kernel: $(kern_obj_list)
 	$(V)mkdir -p $(OUTROOT)/kern
-	$(V)gcc $(KERN_LINK_FLAGS) $(kern_obj_list) -o $(OUTROOT)/kern/kernel
+	$(V)gcc $(KERN_LINK_FLAGS) $(kern_obj_list) -lgcc -o $(OUTROOT)/kern/kernel
 	$(V)objdump -d $(OUTROOT)/kern/kernel > $(OUTROOT)/kern/kernel.asm
 	$(V)echo Kernel created.
