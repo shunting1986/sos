@@ -9,8 +9,13 @@ static void check_one_func(int bus, int dev, int func) {
 	outl(PCI_CONF_ADDR, addr);
 	uint32_t data = inl(PCI_CONF_DATA);
 	if ((data & 0xffff) != 0xffff) {
-		// printf("addr is %x\n", addr);
-		printf("data is %x\n", data);
+		int vendor_id = data & 0xffff;
+		int device_id = (data >> 16) & 0xffff;
+		printf("- %d:%d:%d %x (%s) %x (%s)\n", bus, dev, func,
+			vendor_id,
+			get_vendor_name(vendor_id),
+			device_id,
+			get_device_name(vendor_id, device_id));
 	}
 }
 

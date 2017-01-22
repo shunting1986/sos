@@ -5,6 +5,11 @@
 #error only support 32 bit yet
 #endif
 
+/*
+ * Not sure if it's a good location to put definition of NULL
+ */
+#define NULL ((void *) 0)
+
 typedef char int8_t;
 typedef unsigned char uint8_t;
 typedef short int16_t;
