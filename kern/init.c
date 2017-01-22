@@ -17,6 +17,7 @@ void
 kern_init(void) {
 	static_assert(sizeof(struct seg_desc) == 8);
 	static_assert(sizeof(struct pseudo_desc) == 6);
+	clear_screen(); // needed for QEMU but may not needed for physcal machine
 	printf("Welcome to SOS %d\nHave fun\n", 2017);
 	pci_enumerate();
 	panic("%s!", "not ready yet");

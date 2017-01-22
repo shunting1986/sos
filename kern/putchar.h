@@ -4,5 +4,6 @@
 void locputchar(unsigned int r, unsigned int c, int clrch);
 
 void putchar(int clrch);
+void clear_screen(void);
 
 #endif
