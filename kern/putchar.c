@@ -1,6 +1,7 @@
 #include <kern/putchar.h>
 #include <inc/stdint.h>
 #include <kern/assert.h>
+#include <kern/x86.h>
 #include <inc/string.h>
 
 #define CONS_WIDTH 80
@@ -11,6 +12,10 @@
 
 static unsigned int _cons_r = 0;
 static unsigned int _cons_c = 0;
+
+static void serial_putchar(int clrch) {
+	outb(0x3F8, clrch & 0xFF);
+}
 
 // NOTE: putchar does not do escape, caller should take care
 void putchar(int clrch) {
@@ -25,9 +30,11 @@ void putchar(int clrch) {
 	case '\n':
 		_cons_r++;
 		_cons_c = 0;
+		serial_putchar('\n');
 		break;
 	default:
 		locputchar(_cons_r, _cons_c, clrch);
+		serial_putchar(clrch);
 		_cons_c++;
 		break;
 	}
