@@ -2,7 +2,7 @@
 #include <kern/assert.h>
 #include <inc/stdint.h>
 
-#define PACK_ADDR(bus, dev, func, dwoff) (0x80000000 | ((bus) << 16) | ((dev) << 11) | ((func) << 8) | ((dwoff) << 2))
+#define PCI_DEBUG 0
 
 static void check_one_func(int bus, int dev, int func) {
 	uint32_t addr = PACK_ADDR(bus, dev, func, 0);
@@ -11,11 +11,25 @@ static void check_one_func(int bus, int dev, int func) {
 	if ((data & 0xffff) != 0xffff) {
 		int vendor_id = data & 0xffff;
 		int device_id = (data >> 16) & 0xffff;
+		struct device_info *devinfo = get_device_info(vendor_id, device_id);
+
+		#if PCI_DEBUG
 		printf("- %d:%d:%d %x (%s) %x (%s)\n", bus, dev, func,
 			vendor_id,
 			get_vendor_name(vendor_id),
 			device_id,
-			get_device_name(vendor_id, device_id));
+			DEVINFO_TO_DEVNAME(devinfo));
+		int addr_ind;
+		for (addr_ind = 0; addr_ind < 6; addr_ind++) {
+			outl(PCI_CONF_ADDR, PACK_ADDR(bus, dev, func, PCI_BAR0_DWOFF + addr_ind));
+			uint32_t bar = inl(PCI_CONF_DATA);
+			printf("    bar %d %x\n", addr_ind, bar);
+		}
+		#endif
+
+		if (devinfo && devinfo->init_fn) {
+			devinfo->init_fn(bus, dev, func);
+		}
 	}
 }
 

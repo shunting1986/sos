@@ -5,8 +5,8 @@
 #include <kern/printf.h>
 
 #define assert(cond) do { \
-	if (!cond) { \
-		panic("assertion fail"); \
+	if (!(cond)) { \
+		panic("assertion fail: " #cond); \
 	} \
 } while (0)
 
