@@ -17,7 +17,7 @@ static void check_classcode(int bus, int dev, int func) {
 	assert(progif == 0); // undef
 }
 
-void usb_controller_init(int bus, int dev, int func) {
+void usb_controller_enum_fn(int bus, int dev, int func) {
 	// need bar4
 	int bar4_addr = PACK_ADDR(bus, dev, func, PCI_BAR0_DWOFF + 4);
 	outl(PCI_CONF_ADDR, bar4_addr);
@@ -39,5 +39,19 @@ void usb_controller_init(int bus, int dev, int func) {
 	assert(usb_iobase % ioreg_size == 0);
 
 	check_classcode(bus, dev, func);
+
+	// Need to write back the orignally bar. Otherwise the following read/write with bar does not work
+	outl(PCI_CONF_ADDR, bar4_addr);
+	outl(PCI_CONF_DATA, bar4);
 }
 
+void usb_init(void) {
+	int i;
+	for (i = 0; i < 16; i++) {
+		int port = usb_iobase + (i << 1);
+		uint16_t data = inw(port);
+		printf("data %x %x\n", port, data);
+	}
+
+	panic("ni");
+}

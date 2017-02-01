@@ -18,7 +18,7 @@ struct device_info device_name_list[] = {
 	{ 0x8086, 0x1237, "PCI & Memory"},
 	{ 0x8086, 0x7000, "PIIX3 PCI-to-ISA Bridge (Triton II)"},
 	{ 0x8086, 0x7010, "PIIX3 IDE Interface (Triton II)"},
-	{ 0x8086, 0x7020, "PIIX3 USB Host Controller (Triton II)", usb_controller_init},
+	{ 0x8086, 0x7020, "PIIX3 USB Host Controller (Triton II)", usb_controller_enum_fn},
 	{ 0x8086, 0x7113, "PIIX4/4E/4M Power Management Controller"},
 	{ 0x8086, 0x100e, "Intel Pro 1000/MT"},
 	{ 0x1013, 0x00B8, "64-bit VisualMedia Accelerator"},

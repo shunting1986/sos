@@ -20,5 +20,6 @@ kern_init(void) {
 	clear_screen(); // needed for QEMU but may not needed for physcal machine
 	printf("Welcome to SOS %d\nHave fun\n", 2017);
 	pci_enumerate();
+	usb_init();
 	panic("%s!", "not ready yet");
 }
