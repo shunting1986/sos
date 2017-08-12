@@ -20,3 +20,6 @@ hello: hello_bootloader
 
 clean:
 	$(V)rm -rf $(OUTROOT)
+
+mktags:
+	$(V)ctags -R kern inc boot

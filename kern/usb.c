@@ -3,6 +3,7 @@
 #include <kern/pci.h>
 #include <kern/assert.h>
 #include <inc/stdint.h>
+#include <kern/mmu.h>
 
 static int usb_iobase;
 
@@ -45,13 +46,40 @@ void usb_controller_enum_fn(int bus, int dev, int func) {
 	outl(PCI_CONF_DATA, bar4);
 }
 
-void usb_init(void) {
+uint32_t get_frame_list_base_addr() {
+	return inl(usb_iobase + USB_IO_FLBASEADD);
+}
+
+uint32_t frame_list[1024] __attribute__((aligned(4096)));
+
+void dump_io_regs() {
+	printf("Dump usb io registers\n");
 	int i;
 	for (i = 0; i < 16; i++) {
 		int port = usb_iobase + (i << 1);
 		uint16_t data = inw(port);
-		printf("data %x %x\n", port, data);
+		printf("  data %x %x\n", port, (uint32_t) data);
+	}
+}
+
+void update_run_stop_bit(int val) {
+	val = val ? 1 : 0;
+	uint16_t orig_val = inw(usb_iobase + USB_IO_CMD);
+	outw(usb_iobase + USB_IO_CMD, (orig_val & 0xFFFFFFFE) | val);
+}
+
+void usb_init(void) {
+	if (!usb_iobase) {
+		panic("Fail to find usb PCI device");
 	}
 
+	dump_io_regs();
+	update_run_stop_bit(0);
+	outl(usb_iobase + USB_IO_FLBASEADD, PADDR(frame_list));
+	outw(usb_iobase + USB_IO_FRNUM, 0);
+	dump_io_regs();
+	
+	printf("frame list addr %x\n", frame_list);
+	
 	panic("ni");
 }
